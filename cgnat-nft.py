@@ -190,6 +190,7 @@ except (OSError, IOError) as e:
   print "\nErro!\nFalha ao salvar o arquivo onde as regras serão armazenadas (destino): %s" % (nome_arquivo_destino)
   sys.exit(1)
 
-print("\nFIM! %.3f segundos" %(
+print("\nFIM!\n\nAs regras foram geradas no arquivo:\n%s\n\nDuração: %.3f segundos" %(
+  caminho_deste_script + nome_arquivo_destino,
   (time.time()-momento_incial)
 ))
