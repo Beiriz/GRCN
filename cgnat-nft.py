@@ -34,8 +34,8 @@ momento_incial = time.time()
 indice = 0
 txt_publico = ""
 txt_privada = ""
-masc_subrede_privada = 0 #32 IPs cgnat para 1 IP público
-qt_portas = int(0) #quantidade de portas que serão reservadas por IP privado.
+masc_subrede_privada = int(27) #32 IPs cgnat para 1 IP público
+qt_portas = int(2048) #quantidade de portas que serão reservadas por IP privado.
 
 #--------------------------------------------------------------------------
 
@@ -114,7 +114,7 @@ subnets_privadas = list(rede_privada.subnets(new_prefix=masc_subrede_privada))
 #subnets_privadas = rede_privada.subnets(new_prefix=masc_subrede_privada)
 
 for ip_publico in rede_publica:
-  arquivo_destino.write("\n# %s #INDICE %i / IP PUBLICO %s\n\n" % ('-'*40, indice, str(ip_publico)))
+  arquivo_destino.write("# %s #INDICE %i / IP PUBLICO %s\n" % ('-'*40, indice, str(ip_publico)))
   arquivo_destino.write("add chain ip nat CGNATOUT_%i\n" % (indice))
   arquivo_destino.write("add chain ip nat CGNATIN_%i\n" % (indice))
   arquivo_destino.write("flush chain ip nat CGNATOUT_%i\n" % (indice))
@@ -164,7 +164,7 @@ for ip_publico in rede_publica:
     if porta_fim > 65535:
       porta_fim = 65535
   #regras finais para a subrede x IP público
-  arquivo_destino.write("\n")
+  #arquivo_destino.write("\n")
   arquivo_destino.write("%s CGNATOUT_%i counter snat to %s\n" % (
     __com1__,
     indice,
