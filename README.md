@@ -1,4 +1,9 @@
 #Beiriz 01/jun/2020
+
+#Pré requisito: ipaddress
+Executar como root para instalar:
+pip install ipaddress
+
 #Exemplo de uso do script:
 
 Exemplo básico:
