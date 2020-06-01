@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-python cgnat-nft.py $1 $2 $3 $4 $5
+python cgnat-nft.py $1 $2 $3 $4
