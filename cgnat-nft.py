@@ -46,7 +46,8 @@ print("    %s" %(titulo))
 print("#"*100)
 
 try:
-  indice = int(sys.argv[1])
+  indice = sys.argv[1]
+  indice = int(indice)
   txt_publico = sys.argv[2]
   txt_privada = sys.argv[3]
   if len(sys.argv) > 4 and sys.argv[4] > 0:
