@@ -110,15 +110,14 @@ subnets_privadas = list(rede_privada.subnets(new_prefix=masc_subrede_privada))
 #subnets_privadas = rede_privada.subnets(new_prefix=masc_subrede_privada)
 
 for ip_publico in rede_publica:
-  arquivo_destino.write("# %s #INDICE %i / IP PUBLICO %s\n" % ('-'*40, indice, str(ip_publico)))
-  arquivo_destino.write("add chain ip nat CGNATOUT_%i\n" % (indice))
-  arquivo_destino.write("add chain ip nat CGNATIN_%i\n" % (indice))
-  arquivo_destino.write("flush chain ip nat CGNATOUT_%i\n" % (indice))
-  arquivo_destino.write("flush chain ip nat CGNATIN_%i\n" % (indice))
-
   if len(subnets_privadas) <= indice:
     print('Erro de indexação para o IP %s! Infome uma máscara para a subrede compatível com a quantidade de IPs públicos.' % str(ip_publico))
   else:
+    arquivo_destino.write("# %s #INDICE %i / IP PUBLICO %s\n" % ('-' * 40, indice, str(ip_publico)))
+    arquivo_destino.write("add chain ip nat CGNATOUT_%i\n" % (indice))
+    arquivo_destino.write("add chain ip nat CGNATIN_%i\n" % (indice))
+    arquivo_destino.write("flush chain ip nat CGNATOUT_%i\n" % (indice))
+    arquivo_destino.write("flush chain ip nat CGNATIN_%i\n" % (indice))
     subnet = subnets_privadas[indice]
     # Zera o range de portas para o prox IP publico
     porta_ini = 1
