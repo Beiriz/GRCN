@@ -67,7 +67,7 @@ except:
   print("- <BLOCO_PUBLICO>: É o bloco de IPs públicos por onde o bloco CGNAT vai sair para a internet. Exemplo: X.X.X.X/27")
   print("- <BLOCO_PRIVADO>: É o bloco de IPs privados que serão entregues ao assinante. Exemplo: 100.69.0.0/22")
   print("- <QUANTIDADE_PORTAS_POR_IP_PRIVADO>: Opcionalmente informado, pois seu valor Default é '%i'. Cada IP privado vai conseguir sair por 2000 portas do IP público." % qt_portas)
-  print("\nOBS: Esse script vai dividir o <BLOCO_PRIVADO> em /%is. Se <BLOCO_PUBLICO> for um /27, São colocados exatamente 32 IPs privados (assinantes) atrás de um IP público. O famoso \"1:32\".\n" % masc_subrede_privada)
+  print("\nOBS: Esse script vai dividir o <BLOCO_PRIVADO> em /%is. Se <BLOCO_PUBLICO> for um /27, serão colocados exatamente 32 IPs privados (assinantes) atrás de um IP público. O famoso \"1:32\".\n" % masc_subrede_privada)
   print("\n")
   exit(0)
 
