@@ -27,6 +27,8 @@ python cgnat-nft.py 0 xxx.xxx.xxx.xxx/27 100.69.0.0/22 2000
 
 OBS: Esse script vai dividir o <BLOCO_PRIVADO> em /27s. Se <BLOCO_PUBLICO> for um /27, serão colocados exatamente 32 IPs privados (assinantes) atrás de um IP público. O famoso "1:32".
 
+Ele também pode ser executado no bash com o comando "./cgnat-nft.sh", ao invés do "python cgnat-nft.py".
+
 ------------------------------------------------------------------------
 LICENÇA
 ------------------------------------------------------------------------
