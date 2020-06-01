@@ -35,7 +35,7 @@ indice = 0
 txt_publico = ""
 txt_privada = ""
 masc_subrede_privada = int(27) #32 IPs cgnat para 1 IP público
-qt_portas = int(2048) #quantidade de portas que serão reservadas por IP privado.
+qt_portas = int(2000) #quantidade de portas que serão reservadas por IP privado.
 
 #--------------------------------------------------------------------------
 
@@ -52,12 +52,8 @@ try:
   txt_privada = sys.argv[3]
   if len(sys.argv) > 4 and sys.argv[4] > 0:
     masc_subrede_privada = int(sys.argv[4])
-  else:
-    masc_subrede_privada = 27
   if len(sys.argv) > 5 and sys.argv[5] > 0:
     qt_portas = int(sys.argv[5])
-  else:
-    qt_portas = 2048
 except:
   print("\nErro! Informe os parâmetros para este script:")
   print("\n")
@@ -120,70 +116,73 @@ for ip_publico in rede_publica:
   arquivo_destino.write("flush chain ip nat CGNATOUT_%i\n" % (indice))
   arquivo_destino.write("flush chain ip nat CGNATIN_%i\n" % (indice))
 
-  subnet = subnets_privadas[indice]
-  # Zera o range de portas para o prox IP publico
-  porta_ini = 1
-  porta_fim = qt_portas
-  print("%s INDICE=%i - IP_PUBLICO=%s -> SUBNET_PRIVADA=%s" % ("=" * 40, indice, str(ip_publico),str(subnet)))
-  for ip_privado in ipaddress.ip_network(subnet):
-    #trp = "1-2048"
-    trp = "%i-%i" % (porta_ini,porta_fim)
-    print("%s IP PRIVADO %s:%s" %("-"*60,str(ip_privado),trp))
-    #Regras para cada IP privado
-    arquivo_destino.write("%s CGNATOUT_%i ip protocol tcp ip saddr %s counter snat to %s:%s\n" % (
+  if len(subnets_privadas) <= indice:
+    print('Erro de indexação para o IP %s! Infome uma máscara para a subrede compatível com a quantidade de IPs públicos.' % str(ip_publico))
+  else:
+    subnet = subnets_privadas[indice]
+    # Zera o range de portas para o prox IP publico
+    porta_ini = 1
+    porta_fim = qt_portas
+    print("%s INDICE=%i - IP_PUBLICO=%s -> SUBNET_PRIVADA=%s" % ("=" * 40, indice, str(ip_publico),str(subnet)))
+    for ip_privado in ipaddress.ip_network(subnet):
+      #trp = "1-2048"
+      trp = "%i-%i" % (porta_ini,porta_fim)
+      print("%s IP PRIVADO %s:%s" %("-"*60,str(ip_privado),trp))
+      #Regras para cada IP privado
+      arquivo_destino.write("%s CGNATOUT_%i ip protocol tcp ip saddr %s counter snat to %s:%s\n" % (
+        __com1__,
+        indice,
+        str(ip_privado),
+        str(ip_publico),
+        trp
+      ))
+      arquivo_destino.write("%s CGNATOUT_%i ip protocol udp ip saddr %s counter snat to %s:%s\n" % (
+        __com1__,
+        indice,
+        str(ip_privado),
+        str(ip_publico),
+        trp
+      ))
+      arquivo_destino.write("%s CGNATIN_%i ip daddr %s tcp dport %s counter dnat to %s\n" % (
+        __com1__,
+        indice,
+        str(ip_publico),
+        trp,
+        str(ip_privado)
+      ))
+      arquivo_destino.write("%s CGNATIN_%i ip daddr %s udp dport %s counter dnat to %s\n" % (
+        __com1__,
+        indice,
+        str(ip_publico),
+        trp,
+        str(ip_privado)
+      ))
+      #incrementa o range de portas para o próximo IP privado do /27
+      porta_ini+=qt_portas
+      porta_fim += qt_portas
+      if porta_fim > 65535:
+        porta_fim = 65535
+    #regras finais para a subrede x IP público
+    #arquivo_destino.write("\n")
+    arquivo_destino.write("%s CGNATOUT_%i counter snat to %s\n" % (
       __com1__,
       indice,
-      str(ip_privado),
-      str(ip_publico),
-      trp
+      str(ip_publico)
     ))
-    arquivo_destino.write("%s CGNATOUT_%i ip protocol udp ip saddr %s counter snat to %s:%s\n" % (
+    arquivo_destino.write("%s CGNATOUT ip saddr %s counter jump CGNATOUT_%i\n" % (
       __com1__,
-      indice,
-      str(ip_privado),
-      str(ip_publico),
-      trp
+      str(subnet),
+      indice
     ))
-    arquivo_destino.write("%s CGNATIN_%i ip daddr %s tcp dport %s counter dnat to %s\n" % (
+    arquivo_destino.write("%s CGNATIN ip daddr %s/32 counter jump CGNATIN_%i\n" % (
       __com1__,
-      indice,
       str(ip_publico),
-      trp,
-      str(ip_privado)
+      indice
     ))
-    arquivo_destino.write("%s CGNATIN_%i ip daddr %s udp dport %s counter dnat to %s\n" % (
-      __com1__,
-      indice,
-      str(ip_publico),
-      trp,
-      str(ip_privado)
-    ))
-    #incrementa o range de portas para o próximo IP privado do /27
-    porta_ini+=qt_portas
-    porta_fim += qt_portas
-    if porta_fim > 65535:
-      porta_fim = 65535
-  #regras finais para a subrede x IP público
-  #arquivo_destino.write("\n")
-  arquivo_destino.write("%s CGNATOUT_%i counter snat to %s\n" % (
-    __com1__,
-    indice,
-    str(ip_publico)
-  ))
-  arquivo_destino.write("%s CGNATOUT ip saddr %s counter jump CGNATOUT_%i\n" % (
-    __com1__,
-    str(subnet),
-    indice
-  ))
-  arquivo_destino.write("%s CGNATIN ip daddr %s/32 counter jump CGNATIN_%i\n" % (
-    __com1__,
-    str(ip_publico),
-    indice
-  ))
-  #for ip_privado in subnet.subnets(new_prefix=32):
-  #  print("    %s" % (str(ip_privado)))
-  #arquivo_destino.write("\n")
-  indice+=1
+    #for ip_privado in subnet.subnets(new_prefix=32):
+    #  print("    %s" % (str(ip_privado)))
+    #arquivo_destino.write("\n")
+    indice+=1
 
 #-------------------------------------------------------------------------- final
 
