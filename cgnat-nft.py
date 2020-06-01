@@ -24,7 +24,7 @@ import time
 import ipaddress
 
 __author__ = 'Beiriz'
-__version__= 1.000
+__version__= 1.200
 __datebegin__= "01/06/2020"
 __com1__ = "add rule ip nat"
 #-----------------------------------------------------------------------
@@ -51,9 +51,7 @@ try:
   txt_publico = sys.argv[2]
   txt_privada = sys.argv[3]
   if len(sys.argv) > 4 and sys.argv[4] > 0:
-    masc_subrede_privada = int(sys.argv[4])
-  if len(sys.argv) > 5 and sys.argv[5] > 0:
-    qt_portas = int(sys.argv[5])
+    qt_portas = int(sys.argv[4])
 except:
   print("\nErro! Informe os parâmetros para este script:")
   print("\n")
@@ -62,14 +60,14 @@ except:
   print("python %s 0 xxx.xxx.xxx.xxx/27 100.69.0.0/22" %(sys.argv[0]))
   print("\n")
   print("Exemplo avançado:")
-  print("python %s <INDICE> <BLOCO_PUBLICO> <BLOCO_PRIVADO> <MASC_SUB_PRIVADO>(OPCIONAL) <QUANTIDADE_PORTAS_POR_IP_PRIVADO>(OPCIONAL)" %(sys.argv[0]))
-  print("python %s 0 xxx.xxx.xxx.xxx/27 100.69.0.0/22 %i %i" %(sys.argv[0], masc_subrede_privada,qt_portas))
+  print("python %s <INDICE> <BLOCO_PUBLICO> <BLOCO_PRIVADO> <QUANTIDADE_PORTAS_POR_IP_PRIVADO>(OPCIONAL)" %(sys.argv[0]))
+  print("python %s 0 xxx.xxx.xxx.xxx/27 100.69.0.0/22 %i" %(sys.argv[0], qt_portas))
   print("\n")
   print("- <INDICE>: Inteiro >=0 que vai ser o sufixo do nome das regras únicas. Exemplo CGNATIN_XXX;")
   print("- <BLOCO_PUBLICO>: É o bloco de IPs públicos por onde o bloco CGNAT vai sair para a internet. Exemplo: X.X.X.X/27")
   print("- <BLOCO_PRIVADO>: É o bloco de IPs privados que serão entregues ao assinante. Exemplo: 100.69.0.0/22")
-  print("- <MASC_SUB_PRIVADO>: Opcionalmente informado, pois seu valor Default é '%i'. Inteiro que representa a máscara da subrede do bloco privado que vai ser associado à um IP público;" % masc_subrede_privada)
   print("- <QUANTIDADE_PORTAS_POR_IP_PRIVADO>: Opcionalmente informado, pois seu valor Default é '%i'. Cada IP privado vai conseguir sair por 2000 portas do IP público." % qt_portas)
+  print("\nOBS: Esse script vai dividir o <BLOCO_PRIVADO> em /%is. Se <BLOCO_PUBLICO> for um /27, São colocados exatamente 32 IPs privados (assinantes) atrás de um IP público.\n" % masc_subrede_privada)
   print("\n")
   exit(0)
 
