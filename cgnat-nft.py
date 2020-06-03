@@ -24,7 +24,7 @@ import time
 import ipaddress
 
 __author__ = 'Beiriz'
-__version__= 1.201
+__version__= 1.202
 __datebegin__= "01/06/2020"
 __com1__ = "add rule ip nat"
 #-----------------------------------------------------------------------
@@ -90,7 +90,7 @@ try:
   caminho_deste_script = os.path.dirname(os.path.realpath(__file__))+'/'
   arquivo_destino = open(caminho_deste_script+nome_arquivo_destino, "w")
 except (OSError, IOError) as e:
-  print "\nErro!\nFalha ao abrir a escrita do arquivo onde as regras serão armazenadas (destino): %s" % (nome_arquivo_destino)
+  print ("\nErro!\nFalha ao abrir a escrita do arquivo onde as regras serão armazenadas (destino)")
   sys.exit(1)
 
 arquivo_destino.write("# %s\n" %(titulo))
