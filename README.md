@@ -2,6 +2,8 @@
 
 Beiriz 01/jun/2020
 
+_Testado em Python v2.7.16 e v3.7.7_
+
 ------------------------------------------------------------------------
 
 ## Pré requisito: "ipaddress" do Python.
