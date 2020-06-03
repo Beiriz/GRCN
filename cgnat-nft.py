@@ -24,7 +24,7 @@ import time
 import ipaddress
 
 __author__ = 'Beiriz'
-__version__= 1.203
+__version__= 1.205
 __datebegin__= "01/06/2020"
 __com1__ = "add rule ip nat"
 #-----------------------------------------------------------------------
@@ -74,8 +74,12 @@ except:
 #-------------------------------------------------------------------------- ajustes dos inputs
 
 nome_arquivo_destino = ("cgnat-%i.conf" % (indice))
+'''
 rede_publica = ipaddress.ip_network(unicode(txt_publico), strict=False)
 rede_privada = ipaddress.ip_network(unicode(txt_privada), strict=False)
+'''
+rede_publica = ipaddress.ip_network(str(txt_publico), strict=False)
+rede_privada = ipaddress.ip_network(str(txt_privada), strict=False)
 
 print(" - Indice: %i;" % (indice))
 print(" - Rede pública: %s;" % (txt_publico))
