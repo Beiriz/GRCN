@@ -31,10 +31,10 @@ python cgnat-nft.py <INDICE> <BLOCO_PUBLICO> <BLOCO_PRIVADO> <QUANTIDADE_PORTAS_
 python cgnat-nft.py 0 xxx.xxx.xxx.xxx/27 100.69.0.0/22 2000
 ```
 
-- <INDICE>: Inteiro >=0 que vai ser o sufixo do nome das regras únicas. Exemplo CGNATIN_XXX;
-- <BLOCO_PUBLICO>: É o bloco de IPs públicos por onde o bloco CGNAT vai sair para a internet. Exemplo: X.X.X.X/27
-- <BLOCO_PRIVADO>: É o bloco de IPs privados que serão entregues ao assinante. Exemplo: 100.69.0.0/22
-- <QUANTIDADE_PORTAS_POR_IP_PRIVADO>: Opcionalmente informado, pois seu valor Default é '2000'. Cada IP privado vai conseguir sair por 2000 portas do IP público.
+* <INDICE> Inteiro >=0 que vai ser o sufixo do nome das regras únicas. Exemplo CGNATIN_XXX;
+* <BLOCO_PUBLICO> É o bloco de IPs públicos por onde o bloco CGNAT vai sair para a internet. Exemplo: X.X.X.X/27
+* <BLOCO_PRIVADO> É o bloco de IPs privados que serão entregues ao assinante. Exemplo: 100.69.0.0/22
+* <QUANTIDADE_PORTAS_POR_IP_PRIVADO> Opcionalmente informado, pois seu valor Default é '2000'. Cada IP privado vai conseguir sair por 2000 portas do IP público.
 
 OBS: Esse script vai dividir o <BLOCO_PRIVADO> em /27s. Se <BLOCO_PUBLICO> for um /27, serão colocados exatamente 32 IPs privados (assinantes) atrás de um IP público. O famoso "1:32".
 
