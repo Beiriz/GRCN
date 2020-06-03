@@ -29,6 +29,8 @@ OBS: Esse script vai dividir o <BLOCO_PRIVADO> em /27s. Se <BLOCO_PUBLICO> for u
 
 Ele também pode ser executado no bash com o comando "./cgnat-nft.sh", ao invés do "python cgnat-nft.py".
 
+Link da palestra da live do Marcelo Gondim no "FiqueEmCasaUseDebian #23 - CGNAT com NFTables": https://www.youtube.com/watch?v=5uOFtkplDts
+
 ------------------------------------------------------------------------
 LICENÇA
 ------------------------------------------------------------------------
