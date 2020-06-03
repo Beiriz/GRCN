@@ -24,7 +24,7 @@ import time
 import ipaddress
 
 __author__ = 'Beiriz'
-__version__= 1.202
+__version__= 1.203
 __datebegin__= "01/06/2020"
 __com1__ = "add rule ip nat"
 #-----------------------------------------------------------------------
@@ -187,7 +187,7 @@ for ip_publico in rede_publica:
 try:
   arquivo_destino.close()
 except (OSError, IOError) as e:
-  print "\nErro!\nFalha ao salvar o arquivo onde as regras serão armazenadas (destino): %s" % (nome_arquivo_destino)
+  print ("\nErro!\nFalha ao salvar o arquivo onde as regras serão armazenadas (destino)")
   sys.exit(1)
 
 print("\nFIM!\n\nAs regras foram geradas no arquivo:\n%s\n\nDuração: %.3f segundos" %(
