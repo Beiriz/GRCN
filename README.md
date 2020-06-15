@@ -37,7 +37,7 @@ python cgnat-nft.py 0 xxx.xxx.xxx.xxx/27 100.69.0.0/22 2000
 * **<BLOCO_PRIVADO>** É o bloco de IPs privados que serão entregues ao assinante. Exemplo: 100.69.0.0/22
 * **<QUANTIDADE_PORTAS_POR_IP_PRIVADO>** Opcionalmente informado, pois seu valor Default é '2000'. Cada IP privado vai conseguir sair por 2000 portas do IP público.
 
-OBS: Esse script vai dividir o <BLOCO_PRIVADO> em /27s. Se <BLOCO_PUBLICO> for um /27, serão colocados exatamente 32 IPs privados (assinantes) atrás de um IP público. O famoso "1:32".
+OBS: Esse script vai dividir o <BLOCO_PRIVADO> em N sub-redes privadas. Cada sub-rede privada sai por um único IP público. Se <BLOCO_PUBLICO> for um /27, serão colocados exatamente 32 IPs privados (assinantes) atrás de um IP público. O famoso "1:32". Também aceitas outras relações de CGNAT (1:16,1:8,etc).
 
 Ele também pode ser executado no bash com o comando "./cgnat-nft.sh", ao invés do "python cgnat-nft.py".
 
