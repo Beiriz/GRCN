@@ -24,7 +24,7 @@ import time
 import ipaddress
 
 __author__ = 'Beiriz'
-__version__= 2.000
+__version__= 2.001
 __datebegin__= "01/06/2020"
 __com1__ = "add rule ip nat"
 
@@ -75,7 +75,7 @@ except:
   print("- <BLOCO_PUBLICO>: É o bloco de IPs públicos por onde o bloco CGNAT vai sair para a internet. Exemplo: X.X.X.X/27")
   print("- <BLOCO_PRIVADO>: É o bloco de IPs privados que serão entregues ao assinante. Exemplo: 100.69.0.0/22")
   print("- <QUANTIDADE_PORTAS_POR_IP_PRIVADO>: Opcionalmente informado, pois seu valor Default é '%i'. Cada IP privado vai conseguir sair por 2000 portas do IP público." % qt_portas)
-  print("\nOBS: Esse script vai dividir o <BLOCO_PRIVADO> em /%is. Se <BLOCO_PUBLICO> for um /27, serão colocados exatamente 32 IPs privados (assinantes) atrás de um IP público. O famoso \"1:32\".\n" % masc_subrede_privada)
+  print("\nOBS: Esse script vai dividir o <BLOCO_PRIVADO> em N sub-redes privadas. Cada sub-rede privada sai por um único IP público. Se <BLOCO_PUBLICO> for um /27, serão colocados exatamente 32 IPs privados (assinantes) atrás de um IP público. O famoso \"1:32\". Também aceitas outras relações de CGNAT (1:16,1:8,etc).\n")
   print("\n")
   exit(0)
 
