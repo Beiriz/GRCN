@@ -24,7 +24,7 @@ import time
 import ipaddress
 
 __author__ = 'Beiriz'
-__version__= 2.001
+__version__= 2.002
 __datebegin__= "01/06/2020"
 __com1__ = "add rule ip nat"
 
@@ -80,12 +80,12 @@ except:
   print("%s python %s 0 192.0.2.0/27 100.69.0.0/22 1025 65535 1000" %(' '*6, sys.argv[0]))
   print("```")
   print("\n###### Parâmetros:\n")
-  print("*  <INDICE>: Inteiro >=0 que vai ser o sufixo do nome das regras únicas. Exemplo *CGNATIN_XXX*;\n")
-  print("* <BLOCO_PUBLICO>: É o bloco de IPs públicos por onde o bloco CGNAT vai sair para a internet. Exemplo: *192.0.2.0/27*\n")
-  print("* <BLOCO_PRIVADO>: É o bloco de IPs privados que serão entregues ao assinante. Exemplo: *100.69.0.0/22*\n")
-  print("* <PORTA_PUBLICA_INICIAL>: É a 1ª porta de cada IP público. Opcionalmente informada, pois seu valor padrão é *1*.\n")
-  print("* <PORTA_PUBLICA_FINAL>: É a última porta de cada IP público. Opcionalmente informada, pois seu valor padrão é *65535*.\n")
-  print("* <QUANTIDADE_PORTAS_POR_IP_PRIVADO>: Opcionalmente informado, pois é automaticamente calculado pela relação de IP privado x público. É a quantidade de portas que será destinada para cada IP privado.\n")
+  print("* INDICE: Inteiro >=0 que vai ser o sufixo do nome das regras únicas. Exemplo *CGNATIN_XXX*;\n")
+  print("* BLOCO_PUBLICO: É o bloco de IPs públicos por onde o bloco CGNAT vai sair para a internet. Exemplo: *192.0.2.0/27*\n")
+  print("* BLOCO_PRIVADO: É o bloco de IPs privados que serão entregues ao assinante. Exemplo: *100.69.0.0/22*\n")
+  print("* PORTA_PUBLICA_INICIAL: É a 1ª porta de cada IP público. Opcionalmente informada, pois seu valor padrão é *1*.\n")
+  print("* PORTA_PUBLICA_FINAL: É a última porta de cada IP público. Opcionalmente informada, pois seu valor padrão é *65535*.\n")
+  print("* QUANTIDADE_PORTAS_POR_IP_PRIVADO: Opcionalmente informado, pois é automaticamente calculado pela relação de IP privado x público. É a quantidade de portas que será destinada para cada IP privado.\n")
   print("\n####### Observações:\n")
   print("* O range de portas públicas deve ser preferencialmente deixado como padrão, para que cada IP privado receba o maior número possível de portas.\n")
   print("* Respeite a ordem dos parâmetros opcionais: Se quiser preencher apenas <QUANTIDADE_PORTAS_POR_IP_PRIVADO>, que está no final, sem alterar o range de portas, informe *1 65535 <QUANTIDADE_PORTAS_POR_IP_PRIVADO>*.\n")
