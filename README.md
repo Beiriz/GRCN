@@ -47,20 +47,20 @@ pip install ipaddress
 
 ###### Parâmetros:
 
-*  \<INDICE\>: Inteiro >=0 que vai ser o sufixo do nome das regras únicas. Exemplo *CGNATIN_XXX*;
+*  INDICE: Inteiro >=0 que vai ser o sufixo do nome das regras únicas. Exemplo *CGNATIN_XXX*;
 
-* <BLOCO_PUBLICO>: É o bloco de IPs públicos por onde o bloco CGNAT vai sair para a internet. Exemplo: *192.0.2.0/27*
+* BLOCO_PUBLICO: É o bloco de IPs públicos por onde o bloco CGNAT vai sair para a internet. Exemplo: *192.0.2.0/27*
 
-* <BLOCO_PRIVADO>: É o bloco de IPs privados que serão entregues ao assinante. Exemplo: *100.69.0.0/22*
+* BLOCO_PRIVADO: É o bloco de IPs privados que serão entregues ao assinante. Exemplo: *100.69.0.0/22*
 
-* <PORTA_PUBLICA_INICIAL>: É a 1ª porta de cada IP público. Opcionalmente informada, pois seu valor padrão é *1*.
+* PORTA_PUBLICA_INICIAL: É a 1ª porta de cada IP público. Opcionalmente informada, pois seu valor padrão é *1*.
 
-* <PORTA_PUBLICA_FINAL>: É a última porta de cada IP público. Opcionalmente informada, pois seu valor padrão é *65535*.
+* PORTA_PUBLICA_FINAL: É a última porta de cada IP público. Opcionalmente informada, pois seu valor padrão é *65535*.
 
-* <QUANTIDADE_PORTAS_POR_IP_PRIVADO>: Opcionalmente informado, pois é automaticamente calculado pela relação de IP privado x público. É a quantidade de portas que será destinada para cada IP privado.
+* QUANTIDADE_PORTAS_POR_IP_PRIVADO: Opcionalmente informado, pois é automaticamente calculado pela relação de IP privado x público. É a quantidade de portas que será destinada para cada IP privado.
 
 
-####### Observações:
+###### Observações:
 
 * O range de portas públicas deve ser preferencialmente deixado como padrão, para que cada IP privado receba o maior número possível de portas.
 
