@@ -131,8 +131,8 @@ print(" - Arquivo de destino (conf): '%s';" % (nome_arquivo_destino))
 print("\n")
 
 #Checa se o tamanho das redes permite relação de CGNAT
-if qt_portas_por_ip == 0 or qt_portas_por_ip < qt_ips_privados:
-  print("Erro! Tamanho das redes público, privadas ou quantidade de portas por IP privado que não permite a divisão de CGNAT.\n")
+if qt_portas_por_ip == 0 or qt_ips_privados_por_ip_publico < 1:
+  print("Erro! Tamanho das redes público, privadas ou quantidade de portas por IP privado que não permite a divisão de CGNAT.\n%i %i %i "%(qt_portas_por_ip,qt_portas_por_ip,qt_ips_privados))
   exit(0)
 
 #------------------------------------------------- Abre o arquivo onde as regras serão armazenadas (destino):
