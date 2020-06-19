@@ -4,6 +4,18 @@ Beiriz 01/jun/2020
 
 _Testado em Python v2.7.16 e v3.7.7_
 
+
+Novidades na Versão 2.0: O script passou a fazer o cálculo da quantidade de portas para cada IP privado. Exemplo:
+
+```
+ - Indice das regras: 0;
+ - Rede pública: 203.0.113.0/32 (1 IPs);
+ - Rede privada: 100.64.0.0/27 (32 IPs);
+ - Quantidade de IPs privados por IP público: 32 (1 sub-redes /27);
+ - Portas por IP privado: 2016;
+```
+
+
 ------------------------------------------------------------------------
 
 ## Pré requisito: "ipaddress" do Python.
@@ -16,30 +28,46 @@ pip install ipaddress
 ```
 
 ------------------------------------------------------------------------
-## Exemplo de uso do script:
+## Manual de Instruções:
 
 ###### Exemplo básico:
 
 ```
-python cgnat-nft.py <INDICE> <BLOCO_PUBLICO> <BLOCO_PRIVADO>
-python cgnat-nft.py 0 xxx.xxx.xxx.xxx/27 100.69.0.0/22
+      python ./cgnat-nft.py <INDICE> <BLOCO_PUBLICO> <BLOCO_PRIVADO>
+      python ./cgnat-nft.py 0 192.0.2.0/27 100.69.0.0/22
 ```
 
 ###### Exemplo avançado:
 
 ```
-python cgnat-nft.py <INDICE> <BLOCO_PUBLICO> <BLOCO_PRIVADO> <QUANTIDADE_PORTAS_POR_IP_PRIVADO>(OPCIONAL)
-python cgnat-nft.py 0 xxx.xxx.xxx.xxx/27 100.69.0.0/22 2000
+       python ./cgnat-nft.py <INDICE> <BLOCO_PUBLICO> <BLOCO_PRIVADO> <PORTA_PUBLICA_INICIAL>(OPCIONAL) <PORTA_PUBLICA_FINAL>(OPCIONAL> <QUANTIDADE_PORTAS_POR_IP_PRIVADO>(OPCIONAL)
+       python ./cgnat-nft.py 0 192.0.2.0/27 100.69.0.0/22 1025 65535 1000
 ```
 
-* **\<INDICE\>** Inteiro >=0 que vai ser o sufixo do nome das regras únicas. Exemplo *CGNATIN_XXX*;
-* **<BLOCO_PUBLICO>** É o bloco de IPs públicos por onde o bloco CGNAT vai sair para a internet. Exemplo: X.X.X.X/27
-* **<BLOCO_PRIVADO>** É o bloco de IPs privados que serão entregues ao assinante. Exemplo: 100.69.0.0/22
-* **<QUANTIDADE_PORTAS_POR_IP_PRIVADO>** Opcionalmente informado, pois seu valor Default é '2000'. Cada IP privado vai conseguir sair por 2000 portas do IP público.
+###### Parâmetros:
 
-OBS: Esse script vai dividir o <BLOCO_PRIVADO> em N sub-redes privadas. Cada sub-rede privada sai por um único IP público. Se <BLOCO_PUBLICO> for um /27, serão colocados exatamente 32 IPs privados (assinantes) atrás de um IP público. O famoso "1:32". Também aceitas outras relações de CGNAT (1:16,1:8,etc).
+*  <INDICE>: Inteiro >=0 que vai ser o sufixo do nome das regras únicas. Exemplo *CGNATIN_XXX*;
 
-Ele também pode ser executado no bash com o comando "./cgnat-nft.sh", ao invés do "python cgnat-nft.py".
+* <BLOCO_PUBLICO>: É o bloco de IPs públicos por onde o bloco CGNAT vai sair para a internet. Exemplo: *192.0.2.0/27*
+
+* <BLOCO_PRIVADO>: É o bloco de IPs privados que serão entregues ao assinante. Exemplo: *100.69.0.0/22*
+
+* <PORTA_PUBLICA_INICIAL>: É a 1ª porta de cada IP público. Opcionalmente informada, pois seu valor padrão é *1*.
+
+* <PORTA_PUBLICA_FINAL>: É a última porta de cada IP público. Opcionalmente informada, pois seu valor padrão é *65535*.
+
+* <QUANTIDADE_PORTAS_POR_IP_PRIVADO>: Opcionalmente informado, pois é automaticamente calculado pela relação de IP privado x público. É a quantidade de portas que será destinada para cada IP privado.
+
+
+####### Observações:
+
+* O range de portas públicas deve ser preferencialmente deixado como padrão, para que cada IP privado receba o maior número possível de portas.
+
+* Respeite a ordem dos parâmetros opcionais: Se quiser preencher apenas <QUANTIDADE_PORTAS_POR_IP_PRIVADO>, que está no final, sem alterar o range de portas, informe *1 65535 <QUANTIDADE_PORTAS_POR_IP_PRIVADO>*.
+
+* Este script vai dividir o <BLOCO_PRIVADO> em N sub-redes privadas. Cada sub-rede privada sai por um único IP público e dela, cada IP privado sai com uma fração das portas de seu IP público.
+
+* Se <BLOCO_PUBLICO> for um /27 e <BLOCO_PRIVADO> um /22, serão colocados exatamente 32 IPs privados (assinantes) atrás de um IP público. Cada IP privado vai sair com 2047 portas de seu IP público (65535/32=2047,96). O famoso *1:32*. A partir da v2.0, podemos calcular outras relações de CGNAT: 1:16, 1:8, etc.
 
 ------------------------------------------------------------------------
 
