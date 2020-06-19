@@ -46,7 +46,7 @@ pip install ipaddress
 
 ###### Parâmetros:
 
-*  <INDICE>: Inteiro >=0 que vai ser o sufixo do nome das regras únicas. Exemplo *CGNATIN_XXX*;
+*  \<INDICE\>: Inteiro >=0 que vai ser o sufixo do nome das regras únicas. Exemplo *CGNATIN_XXX*;
 
 * <BLOCO_PUBLICO>: É o bloco de IPs públicos por onde o bloco CGNAT vai sair para a internet. Exemplo: *192.0.2.0/27*
 
