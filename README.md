@@ -9,10 +9,11 @@ Novidades na Versão 2.0: O script passou a fazer o cálculo da quantidade de po
 
 ```
  - Indice das regras: 0;
- - Rede pública: 203.0.113.0/32 (1 IPs);
- - Rede privada: 100.64.0.0/27 (32 IPs);
- - Quantidade de IPs privados por IP público: 32 (1 sub-redes /27);
- - Portas por IP privado: 2016;
+ - Rede pública: 203.0.113.0/27 (32 IPs);
+ - Rede privada: 100.64.0.0/22 (1024 IPs);
+ - Quantidade de IPs privados por IP público: 32 (32 sub-redes /27);
+ - Total de portas públicas: 65535 (1-65535);
+ - Portas por IP privado: 2047;
 ```
 
 
