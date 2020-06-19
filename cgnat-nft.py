@@ -24,7 +24,7 @@ import time
 import ipaddress
 
 __author__ = 'Beiriz'
-__version__= 2.002
+__version__= 2.003
 __datebegin__= "01/06/2020"
 __com1__ = "add rule ip nat"
 
