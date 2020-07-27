@@ -169,7 +169,7 @@ momento_incial = time.time()
 #exit(0)
 
 print("\n")
-
+indice_subnet_privada = 0
 for ip_publico in rede_publica:
   arquivo_destino.write("# %s #INDICE %i / IP PUBLICO %s\n" % ('-' * 40, indice, str(ip_publico)))
   arquivo_destino.write("add chain ip nat CGNATOUT_%i\n" % (indice))
@@ -178,7 +178,8 @@ for ip_publico in rede_publica:
   arquivo_destino.write("flush chain ip nat CGNATOUT_%i\n" % (indice))
   if fazer_regras_in:
     arquivo_destino.write("flush chain ip nat CGNATIN_%i\n" % (indice))
-  subnet = subnets_privadas[indice]
+  #print(subnets_privadas)
+  subnet = subnets_privadas[indice_subnet_privada]
   # Zera o range de portas para o prox IP publico
   porta_ini = numero_porta_incial
   ###porta_fim = qt_portas_por_ip
@@ -247,6 +248,7 @@ for ip_publico in rede_publica:
   #  print("    %s" % (str(ip_privado)))
   #arquivo_destino.write("\n")
   indice+=1
+  indice_subnet_privada+=1
 
 #-------------------------------------------------------------------------- final
 
