@@ -1,9 +1,22 @@
 # GRCN - Gerador de Regras CGNAT em nftables
 
-Beiriz 01/jun/2020
+Beiriz 27/julho/2020
 
 _Testado em Python v2.7.16 e v3.7.7_
 
+
+## ATENÇÃO! Novidades na Versão 3.000:
+
+Por boas práticas, o script PAROU de gerar as regras CGNAT do tipo IN. Caso queira continuar gerando-as, edite o script cgnat-nft.py:
+
+Alterando a linha:
+```
+fazer_regras_in = False
+```
+Para:
+```
+fazer_regras_in = True
+```
 
 Novidades na Versão 2.0: O script passou a fazer o cálculo da quantidade de portas para cada IP privado. Exemplo:
 

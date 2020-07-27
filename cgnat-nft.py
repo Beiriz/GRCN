@@ -24,12 +24,12 @@ import time
 import ipaddress
 
 __author__ = 'Beiriz'
-__version__= 2.004
-__datebegin__= "01/06/2020"
+__version__= 3.000
+__datebegin__= "27/07/2020"
 __com1__ = "add rule ip nat"
 
 #-----------------------------------------------------------------------
-
+fazer_regras_in = False #Este valor deve ser alterado para True caso haja interesse de gerar também as regras de CGNAT no sentido IN: 'fazer_regras_in = True'. OBS: CGNAT do tipo OUT sempre serão geradas.
 indice = 0
 txt_publico = ""
 txt_privado = ""
@@ -80,7 +80,7 @@ except:
   print("%s python %s 0 192.0.2.0/27 100.69.0.0/22 1025 65535 1000" %(' '*6, sys.argv[0]))
   print("```")
   print("\n###### Parâmetros:\n")
-  print("* INDICE: Inteiro >=0 que vai ser o sufixo do nome das regras únicas. Exemplo *CGNATIN_XXX*;\n")
+  print("* INDICE: Inteiro >=0 que vai ser o sufixo do nome das regras únicas. Exemplo *CGNATOUT_XXX*;\n")
   print("* BLOCO_PUBLICO: É o bloco de IPs públicos por onde o bloco CGNAT vai sair para a internet. Exemplo: *192.0.2.0/27*\n")
   print("* BLOCO_PRIVADO: É o bloco de IPs privados que serão entregues ao assinante. Exemplo: *100.69.0.0/22*\n")
   print("* PORTA_PUBLICA_INICIAL: É a 1ª porta de cada IP público. Opcionalmente informada, pois seu valor padrão é *1*.\n")
@@ -92,6 +92,8 @@ except:
   print("* Este script vai dividir o <BLOCO_PRIVADO> em N sub-redes privadas. Cada sub-rede privada sai por um único IP público e dela, cada IP privado sai com uma fração das portas de seu IP público.\n")
   print("* Se <BLOCO_PUBLICO> for um /27 e <BLOCO_PRIVADO> um /22, serão colocados exatamente 32 IPs privados (assinantes) atrás de um IP público. Cada IP privado vai sair com 2047 portas de seu IP público (65535/32=2047,96). O famoso *1:32*. A partir da v2.0, podemos calcular outras relações de CGNAT: 1:16, 1:8, etc.\n")
   print("\n")
+  print("\nATENÇÃO! Por boas práticas, o script PAROU de gerar as regras CGNAT do tipo IN. Caso queira continuar gerando-as, edite o cgnat-nft.py, alterando o valor *fazer_regras_in* de *False* para *True*;")
+  print("\nFIM deste manual!\n")
   exit(0)
 
 #------------------------------------------------- trata os parâmetros informados:
@@ -131,6 +133,10 @@ print(" - Portas por IP privado: %i;" % (qt_portas_por_ip))
 print(" - Arquivo de destino (conf): '%s';" % (nome_arquivo_destino))
 print("\n")
 
+if fazer_regras_in:
+  print("\nATENÇÃO!\n  Variável fazer_regras_in=True\n  Mesmo não sendo boas práticas, SERÃO geradas regras de CGNAT do tipo IN!\n")
+
+
 #Checa se o tamanho das redes permite relação de CGNAT
 if qt_portas_por_ip == 0 or qt_ips_privados_por_ip_publico < 1:
   print("Erro! Tamanho das redes público, privadas ou quantidade de portas por IP privado que não permite a divisão de CGNAT.\n%i %i %i "%(qt_portas_por_ip,qt_portas_por_ip,qt_ips_privados))
@@ -167,9 +173,11 @@ print("\n")
 for ip_publico in rede_publica:
   arquivo_destino.write("# %s #INDICE %i / IP PUBLICO %s\n" % ('-' * 40, indice, str(ip_publico)))
   arquivo_destino.write("add chain ip nat CGNATOUT_%i\n" % (indice))
-  arquivo_destino.write("add chain ip nat CGNATIN_%i\n" % (indice))
+  if fazer_regras_in:
+    arquivo_destino.write("add chain ip nat CGNATIN_%i\n" % (indice))
   arquivo_destino.write("flush chain ip nat CGNATOUT_%i\n" % (indice))
-  arquivo_destino.write("flush chain ip nat CGNATIN_%i\n" % (indice))
+  if fazer_regras_in:
+    arquivo_destino.write("flush chain ip nat CGNATIN_%i\n" % (indice))
   subnet = subnets_privadas[indice]
   # Zera o range de portas para o prox IP publico
   porta_ini = numero_porta_incial
@@ -195,20 +203,23 @@ for ip_publico in rede_publica:
       str(ip_publico),
       trp
     ))
-    arquivo_destino.write("%s CGNATIN_%i ip daddr %s tcp dport %s counter dnat to %s\n" % (
-      __com1__,
-      indice,
-      str(ip_publico),
-      trp,
-      str(ip_privado)
-    ))
-    arquivo_destino.write("%s CGNATIN_%i ip daddr %s udp dport %s counter dnat to %s\n" % (
-      __com1__,
-      indice,
-      str(ip_publico),
-      trp,
-      str(ip_privado)
-    ))
+
+    if fazer_regras_in:
+      arquivo_destino.write("%s CGNATIN_%i ip daddr %s tcp dport %s counter dnat to %s\n" % (
+        __com1__,
+        indice,
+        str(ip_publico),
+        trp,
+        str(ip_privado)
+      ))
+      arquivo_destino.write("%s CGNATIN_%i ip daddr %s udp dport %s counter dnat to %s\n" % (
+        __com1__,
+        indice,
+        str(ip_publico),
+        trp,
+        str(ip_privado)
+      ))
+
     #incrementa o range de portas para o próximo IP privado
     porta_ini += qt_portas_por_ip
     porta_fim += qt_portas_por_ip
@@ -226,11 +237,12 @@ for ip_publico in rede_publica:
     str(subnet),
     indice
   ))
-  arquivo_destino.write("%s CGNATIN ip daddr %s/32 counter jump CGNATIN_%i\n" % (
-    __com1__,
-    str(ip_publico),
-    indice
-  ))
+  if fazer_regras_in:
+    arquivo_destino.write("%s CGNATIN ip daddr %s/32 counter jump CGNATIN_%i\n" % (
+      __com1__,
+      str(ip_publico),
+      indice
+    ))
   #for ip_privado in subnet.subnets(new_prefix=32):
   #  print("    %s" % (str(ip_privado)))
   #arquivo_destino.write("\n")
