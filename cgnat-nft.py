@@ -24,7 +24,7 @@ import time
 import ipaddress
 
 __author__ = 'Beiriz'
-__version__= 2.003
+__version__= 2.004
 __datebegin__= "01/06/2020"
 __com1__ = "add rule ip nat"
 
@@ -110,7 +110,8 @@ try:
   qt_ips_privados = int(rede_privada.num_addresses)
   qt_ips_privados_por_ip_publico = int( qt_ips_privados / qt_ips_publicos )
   #qt_portas
-  qt_total_portas = (numero_porta_final+1-numero_porta_incial)
+  ###qt_total_portas = (numero_porta_final+1-numero_porta_incial)
+  qt_total_portas = (numero_porta_final-(numero_porta_incial-1))
   if qt_portas_por_ip == 0:
     print("Calculando a quantidade de portas / IP privado...")
     qt_portas_por_ip = int( qt_total_portas * qt_ips_publicos / qt_ips_privados )
@@ -125,7 +126,7 @@ print(" - Indice das regras: %i;" % (indice))
 print(" - Rede pública: %s (%i IPs);" % (txt_publico,qt_ips_publicos))
 print(" - Rede privada: %s (%i IPs);" % (txt_privado,qt_ips_privados))
 print(" - Quantidade de IPs privados por IP público: %i (%i sub-redes /%s);" % (qt_ips_privados_por_ip_publico, qt_ips_publicos, masc_subrede_privada))
-print(" - Total de portas públicas: %i (%i-%i);" % (qt_total_portas, numero_porta_incial, numero_porta_final))
+print(" - Total de portas públicas: %i (%i a %i);" % (qt_total_portas, numero_porta_incial, numero_porta_final))
 print(" - Portas por IP privado: %i;" % (qt_portas_por_ip))
 print(" - Arquivo de destino (conf): '%s';" % (nome_arquivo_destino))
 print("\n")
@@ -172,7 +173,8 @@ for ip_publico in rede_publica:
   subnet = subnets_privadas[indice]
   # Zera o range de portas para o prox IP publico
   porta_ini = numero_porta_incial
-  porta_fim = qt_portas_por_ip
+  ###porta_fim = qt_portas_por_ip
+  porta_fim = (numero_porta_incial + (qt_portas_por_ip -1))
   print("%s INDICE=%i - IP_PUBLICO=%s -> SUBNET_PRIVADA=%s" % ("=" * 40, indice, str(ip_publico), str(subnet)))
   for ip_privado in ipaddress.ip_network(subnet):
     #trp = "1-2048"
