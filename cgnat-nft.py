@@ -24,7 +24,7 @@ import time
 import ipaddress
 
 __author__ = 'Beiriz'
-__version__= 3.001
+__version__= 3.003
 __datebegin__= "27/07/2020"
 __com1__ = "add rule ip nat"
 
@@ -184,7 +184,7 @@ for ip_publico in rede_publica:
   porta_ini = numero_porta_incial
   ###porta_fim = qt_portas_por_ip
   porta_fim = (numero_porta_incial + (qt_portas_por_ip -1))
-  print("%s INDICE=%i - IP_PUBLICO=%s -> SUBNET_PRIVADA=%s" % ("=" * 40, indice, str(ip_publico), str(subnet)))
+  print("%s INDICE=%i - IP_PUBLICO=%s -> SUBNET_PRIVADA_%i=%s" % ("=" * 40, indice, str(ip_publico), (indice_subnet_privada+1), str(subnet)))
   for ip_privado in ipaddress.ip_network(subnet):
     #trp = "1-2048"
     trp = "%i-%i" % (porta_ini,porta_fim)
