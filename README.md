@@ -13,6 +13,8 @@ Não informar mais a máscara do BLOCO_PRIVADO. A máscara dele sempre vai ser u
 
 Atenção! Não recomendado pelas boas práticas o uso das relações IP/CLIENTES 1/64, 1/128 e 1/256. É muito pouca porta por assinante, gerando problemas.
 
+A saída também teve alterações. Agora o nome do arquivo recebe o índice inicial e final no nome. Exemplo: cgnat-0-31.conf
+
 Exemplos:
 ```
 python3 cgnat-nft.py 0 192.1.2.0/26 100.64.0.0 1/32
