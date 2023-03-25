@@ -5,7 +5,7 @@ Beiriz 27/julho/2020
 _Testado em Python v2.7.16 e v3.7.7_
 
 
-## ATENÇÃO! Novidades nesta Versão 4.000:
+## ATENÇÃO! Novidades nesta Versão 4.000 (25/03/2023):
 
 Os parâmetros mudaram: Agora informe apenas o ÍNDICE, o BLOCO_PUBLICO, o BLOCO_PRIVADO e, opcionalmente, a RELAÇÃO_IP_PUBLICO_X_CLIENTE (1/4, 1/8, 1/16, 1/32, 1/64, 1/125, 1/256)
 
