@@ -5,6 +5,20 @@ Beiriz 27/julho/2020
 _Testado em Python v2.7.16 e v3.7.7_
 
 
+## ATENÇÃO! Novidades nesta Versão 4.000:
+
+Os parâmetros mudaram: Agora informe apenas o ÍNDICE, o BLOCO_PUBLICO, o BLOCO_PRIVADO e, opcionalmente, a RELAÇÃO_IP_PUBLICO_X_CLIENTE (1/4, 1/8, 1/16, 1/32, 1/64, 1/125, 1/256)
+
+Não informar mais a máscara do BLOCO_PRIVADO. A máscara dele sempre vai ser um /16. Não necessariamente será usado todo o /16.
+
+Atenção! Não recomendado pelas boas práticas o uso das relações IP/CLIENTES 1/64, 1/128 e 1/256. É muito pouca porta por assinante, gerando problemas.
+
+Exemplos:
+```
+python3 cgnat-nft.py 0 192.1.2.0/26 100.64.0.0 1/32
+python3 cgnat-nft.py 0 192.1.2.0/26 100.64.0.0 1/16
+```
+
 ## ATENÇÃO! Novidades na Versão 3.000:
 
 Por boas práticas, o script PAROU de gerar as regras CGNAT do tipo IN. Caso queira continuar gerando-as, edite o script cgnat-nft.py:
