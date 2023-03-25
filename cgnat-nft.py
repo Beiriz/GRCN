@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 '''# -*- coding: latin-1 -*-'''
 
@@ -24,8 +24,8 @@ import time
 import ipaddress
 
 __author__ = 'Beiriz'
-__version__= 3.003
-__datebegin__= "27/07/2020"
+__version__= 4.000
+__datebegin__= "27/07/2020 (25/03/2023)"
 __com1__ = "add rule ip nat"
 
 #-----------------------------------------------------------------------
@@ -37,12 +37,14 @@ masc_subrede_privada = 0 #mascara da subrede de IPs privados que serão atendido
 qt_ips_publicos = 0 #Quantidade de IPs públicos na rede informada
 qt_ips_privados = 0 #Quantidade de IPs privados na rede informada
 qt_ips_privados_por_ip_publico = 0 #Quantos IPs privados vão sair por um único IP público ( A relação PRI/PUB)
-qt_portas_por_ip = 0 #quantidade de portas que serão reservadas por IP privado.
+qt_portas_por_ip = 2016 #quantidade de portas que serão reservadas por IP privado.
+numero_porta_incial = 1024
+numero_porta_final = 65535
+relacao = '1/32'
+qt_total_portas = (numero_porta_final-(numero_porta_incial-1))
 #As 2 confs abaixo trabalham em conjunto para ajustar o range total de portas de cada IP público
-numero_porta_incial = 1 #É a menor porta do IP público que será dividido entre seus IPs privados
-numero_porta_final = 65535 #É a maior porta do IP público que será dividido entre seus IPs privados
-mascaras = {8192: 19, 4096: 20, 2048: 21, 1024: 22, 512: 23, 256: 24, 128: 25, 64: 26, 32: 27, 16: 28, 8: 29, 4: 30,
-            2: 31, 1: 32} #dicionário que retorna a máscara para uma quantidade de IPs
+relacao_portas = {'1/4':16128, '1/8':8064, '1/16':4032, '1/32':2016, '1/64':1008, '1/128':504, '1/256':252}
+relacao_mascara = {'1/4':30, '1/8':29, '1/16':28, '1/32':27, '1/64':26, '1/128':25, '1/256':24}
 #-------------------------------------------------
 
 os.system('cls' if os.name == 'nt' else 'clear')
@@ -57,51 +59,60 @@ try:
   #Indice:
   indice = int(sys.argv[1])
   #Blocos:
-  txt_publico = sys.argv[2]
-  txt_privado = sys.argv[3]
-  #range de portas:
-  if len(sys.argv) > 5:
-    if sys.argv[4] > 0 and sys.argv[5] > 0:
-      numero_porta_incial = int(sys.argv[4])
-      numero_porta_final = int(sys.argv[5])
-  if len(sys.argv) > 6 and sys.argv[6] > 0:
-    qt_portas_por_ip = int(sys.argv[6])
+  txt_publico = str(sys.argv[2])
+  if '/' in str(sys.argv[3]):
+    txt_privado = str(str(sys.argv[3]).split('/')[0])+'/16'
+  else:
+    txt_privado = str(sys.argv[3])+'/16'
+  #RELAÇÃO_IP_PUBLICO_X_CLIENTE
+  try:
+    relacao = str(sys.argv[4])
+  except:
+    relacao = '1/32'
+  finally:
+    qt_portas_por_ip = relacao_portas[relacao]
+    print("\n\t[ Ídice inicial: %i | público: %s | privado: %s | %i portas/IP (%s)]\t\n" % (indice, txt_publico, txt_privado, qt_portas_por_ip, relacao))
+
 except:
   print("\nErro! Informe pelo menos os parâmetros obrigatórios deste script.\n")
   print("## Manual de Instruções:")
-  print("\n###### Exemplo básico:\n")
+  print("\n###### Exemplo básico (1/32):\n")
   print("```")
   print("%spython %s <INDICE> <BLOCO_PUBLICO> <BLOCO_PRIVADO>" %(' '*6, sys.argv[0]))
-  print("%spython %s 0 192.0.2.0/27 100.69.0.0/22" %(' '*6, sys.argv[0]))
+  print("%spython %s 0 192.0.2.0/24 100.69.0.0" %(' '*6, sys.argv[0]))
   print("```")
   print("\n###### Exemplo avançado:\n")
   print("```")
-  print("%s python %s <INDICE> <BLOCO_PUBLICO> <BLOCO_PRIVADO> <PORTA_PUBLICA_INICIAL>(OPCIONAL) <PORTA_PUBLICA_FINAL>(OPCIONAL> <QUANTIDADE_PORTAS_POR_IP_PRIVADO>(OPCIONAL)" %(' '*6, sys.argv[0]))
-  print("%s python %s 0 192.0.2.0/27 100.69.0.0/22 1025 65535 1000" %(' '*6, sys.argv[0]))
+  print("%s python %s <INDICE> <BLOCO_PUBLICO> <BLOCO_PRIVADO> <RELAÇÃO_IP_PUBLICO_X_CLIENTE>(OPCIONAL)" %(' '*6, sys.argv[0]))
+  print("%s python %s 0 192.0.2.0/24 100.69.0.0 1/16")
   print("```")
   print("\n###### Parâmetros:\n")
   print("* INDICE: Inteiro >=0 que vai ser o sufixo do nome das regras únicas. Exemplo *CGNATOUT_XXX*;\n")
-  print("* BLOCO_PUBLICO: É o bloco de IPs públicos por onde o bloco CGNAT vai sair para a internet. Exemplo: *192.0.2.0/27*\n")
-  print("* BLOCO_PRIVADO: É o bloco de IPs privados que serão entregues ao assinante. Exemplo: *100.69.0.0/22*\n")
+  print("* BLOCO_PUBLICO: É o bloco de IPs públicos por onde o bloco CGNAT vai sair para a internet. Exemplo: *192.0.2.0/24*\n")
+  print("* BLOCO_PRIVADO: É o bloco de IPs privados que serão entregues ao assinante. Não informar a máscara (sempre vai ser um /16). Exemplo: *100.69.0.0*\n")
   print("* PORTA_PUBLICA_INICIAL: É a 1ª porta de cada IP público. Opcionalmente informada, pois seu valor padrão é *1*.\n")
   print("* PORTA_PUBLICA_FINAL: É a última porta de cada IP público. Opcionalmente informada, pois seu valor padrão é *65535*.\n")
-  print("* QUANTIDADE_PORTAS_POR_IP_PRIVADO: Opcionalmente informado, pois é automaticamente calculado pela relação de IP privado x público. É a quantidade de portas que será destinada para cada IP privado.\n")
+  print("* RELAÇÃO_IP_PUBLICO_X_CLIENTE (OPCIONAL):")
+  print("    - 1/4   - 16128 portas por IP;")
+  print("    - 1/8   - 8064 portas por IP;")
+  print("    - 1/16  - 4032 portas por IP;")
+  print("    - 1/32  - 2016 portas por IP (Configuração padrão, quando este último parâmetro não é informado);")
+  print("    - 1/64  - 1008 portas por IP (Atenção! Não recomendado pelas boas práticas);")
+  print("    - 1/128 - 504 portas por IP (Atenção! Não recomendado pelas boas práticas);")
+  print("    - 1/256 - 252 portas por IP (Atenção! Não recomendado pelas boas práticas);")
   print("\n####### Observações:\n")
   print("* O range de portas públicas deve ser preferencialmente deixado como padrão, para que cada IP privado receba o maior número possível de portas.\n")
   print("* Respeite a ordem dos parâmetros opcionais: Se quiser preencher apenas <QUANTIDADE_PORTAS_POR_IP_PRIVADO>, que está no final, sem alterar o range de portas, informe *1 65535 <QUANTIDADE_PORTAS_POR_IP_PRIVADO>*.\n")
   print("* Este script vai dividir o <BLOCO_PRIVADO> em N sub-redes privadas. Cada sub-rede privada sai por um único IP público e dela, cada IP privado sai com uma fração das portas de seu IP público.\n")
-  print("* Se <BLOCO_PUBLICO> for um /27 e <BLOCO_PRIVADO> um /22, serão colocados exatamente 32 IPs privados (assinantes) atrás de um IP público. Cada IP privado vai sair com 2047 portas de seu IP público (65535/32=2047,96). O famoso *1:32*. A partir da v2.0, podemos calcular outras relações de CGNAT: 1:16, 1:8, etc.\n")
+  print("* Se <BLOCO_PUBLICO> for um /24 e <BLOCO_PRIVADO> um /22, serão colocados exatamente 32 IPs privados (assinantes) atrás de um IP público. Cada IP privado vai sair com 2047 portas de seu IP público (65535/32=2047,96). O famoso *1:32*. A partir da v2.0, podemos calcular outras relações de CGNAT: 1:16, 1:8, etc.\n")
   print("\n")
   print("\nATENÇÃO! Por boas práticas, o script PAROU de gerar as regras CGNAT do tipo IN. Caso queira continuar gerando-as, edite o cgnat-nft.py, alterando o valor *fazer_regras_in* de *False* para *True*;")
   print("\nFIM deste manual!\n")
   exit(0)
-
+#exit(0)
 #------------------------------------------------- trata os parâmetros informados:
 
 try:
-  #Indice:
-  nome_arquivo_destino = ("cgnat-%i.conf" % (indice))
-  #Blocos:
   if sys.version_info >= (3,0):
     rede_publica = ipaddress.ip_network(str(txt_publico), strict=False)
     rede_privada = ipaddress.ip_network(str(txt_privado), strict=False)
@@ -111,36 +122,25 @@ try:
   qt_ips_publicos = int(rede_publica.num_addresses)
   qt_ips_privados = int(rede_privada.num_addresses)
   qt_ips_privados_por_ip_publico = int( qt_ips_privados / qt_ips_publicos )
-  #qt_portas
-  ###qt_total_portas = (numero_porta_final+1-numero_porta_incial)
-  qt_total_portas = (numero_porta_final-(numero_porta_incial-1))
-  if qt_portas_por_ip == 0:
-    print("Calculando a quantidade de portas / IP privado...")
-    qt_portas_por_ip = int( qt_total_portas * qt_ips_publicos / qt_ips_privados )
+  # Nome arquivo de destino
+  nome_arquivo_destino = ("cgnat-%i-%i.conf" % (indice,(indice + qt_ips_publicos - 1)))
   # calcula a máscara das subnets privadas baseado na relação PRI/PUB:
-  masc_subrede_privada = mascaras[qt_ips_privados_por_ip_publico]
-  subnets_privadas = list(rede_privada.subnets(new_prefix=masc_subrede_privada))
+  subnets_privadas = list(rede_privada.subnets(new_prefix=relacao_mascara[relacao]))
 except:
   print("\nErro! Informe parâmetros válidos para este script:\n\nRespeite a relação de IP público x IP privado: 1:32, 1:16, 1:8, etc\n\nEncerrando!\n")
   exit(0)
 
-print(" - Indice das regras: %i;" % (indice))
+print(" - Índice das regras: %i;" % (indice))
 print(" - Rede pública: %s (%i IPs);" % (txt_publico,qt_ips_publicos))
 print(" - Rede privada: %s (%i IPs);" % (txt_privado,qt_ips_privados))
-print(" - Quantidade de IPs privados por IP público: %i (%i sub-redes /%s);" % (qt_ips_privados_por_ip_publico, qt_ips_publicos, masc_subrede_privada))
-print(" - Total de portas públicas: %i (%i a %i);" % (qt_total_portas, numero_porta_incial, numero_porta_final))
+print(" - Quantidade de IPs privados por IP público: %i (%i sub-redes /%i);" % (qt_ips_privados_por_ip_publico, qt_ips_publicos, relacao_mascara[relacao]))
+print(" - Total de portas públicas: %i;" % (qt_total_portas))
 print(" - Portas por IP privado: %i;" % (qt_portas_por_ip))
 print(" - Arquivo de destino (conf): '%s';" % (nome_arquivo_destino))
 print("\n")
 
 if fazer_regras_in:
   print("\nATENÇÃO!\n  Variável fazer_regras_in=True\n  Mesmo não sendo boas práticas, SERÃO geradas regras de CGNAT do tipo IN!\n")
-
-
-#Checa se o tamanho das redes permite relação de CGNAT
-if qt_portas_por_ip == 0 or qt_ips_privados_por_ip_publico < 1:
-  print("Erro! Tamanho das redes público, privadas ou quantidade de portas por IP privado que não permite a divisão de CGNAT.\n%i %i %i "%(qt_portas_por_ip,qt_portas_por_ip,qt_ips_privados))
-  exit(0)
 
 #------------------------------------------------- Abre o arquivo onde as regras serão armazenadas (destino):
 try:
@@ -179,6 +179,7 @@ for ip_publico in rede_publica:
   if fazer_regras_in:
     arquivo_destino.write("flush chain ip nat CGNATIN_%i\n" % (indice))
   #print(subnets_privadas)
+  #print(indice_subnet_privada)
   subnet = subnets_privadas[indice_subnet_privada]
   # Zera o range de portas para o prox IP publico
   porta_ini = numero_porta_incial
